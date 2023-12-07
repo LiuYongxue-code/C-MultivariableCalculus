@@ -1,0 +1,24 @@
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{enumboxes}[2018/10/12 enumboxes package]
+
+\RequirePackage{xparse}
+\RequirePackage{tikz}
+\RequirePackage[shortlabels]{enumitem}
+
+% fixed width boxes for enumeration
+\DeclareRobustCommand{\enumbox}[3]{\tikz[baseline=-0.65ex]
+  \node[
+  minimum width = 14pt, 
+  inner sep=3pt,
+  draw=#1,
+  fill=#2,
+  text=white,
+  rounded corners=1pt]{#3};}
+
+\setenumerate{labelsep=3pt,itemsep=2pt,topsep=0pt} % enumitem 
+\setitemize{labelsep=3pt,itemsep=2pt,topsep=0pt} % enumitem
+
+\newcommand{\greenbox}{\stepcounter{enumi}\enumbox{MidnightBlue}{SeaGreen}{\theenumi}\hspace{2.5pt}}
+\newcommand{\redbox}{\stepcounter{enumi}\enumbox{MidnightBlue}{DarkRed!75!white}{\theenumi}\hspace{2.5pt}}
+\newcommand{\bluebox}{\stepcounter{enumi}\enumbox{MidnightBlue}{MidnightBlue!75!white}{\theenumi}\hspace{2.5pt}}

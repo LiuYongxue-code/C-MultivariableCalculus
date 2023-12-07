@@ -1,0 +1,20 @@
+
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{hiding}[2018/10/12 hiding package]
+
+\RequirePackage{verbatim}
+
+%--ENVIRONMENT HIDING------------------------------
+% To remove all of the \begin{foo} ... \end{foo} environments
+% from the output of a document: \HideEnvironment{foo} 
+
+\newcommand{\HideEnvironment}[1]{
+\renewenvironment{#1}{\expandafter\comment}{\expandafter\endcomment}
+}
+
+\newenvironment{hidden}{\expandafter\comment}{\expandafter\endcomment}
+\newenvironment{juliahidden}{\expandafter\comment}{\expandafter\endcomment}
+
+\newcommand{\hint}[1]{}
+\NewDocumentEnvironment{postpend}{}{}{}

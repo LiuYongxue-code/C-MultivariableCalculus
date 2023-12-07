@@ -1,0 +1,197 @@
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{codeboxes}[2018/10/12 codeboxes package]
+
+\newif\if@prettycodeoption
+\DeclareOption{prettycode}{\@prettycodeoptiontrue}
+\newif\if@shellescapeoption
+\DeclareOption{shellescape}{\@shellescapeoptiontrue}
+\newif\if@breakableoption
+\DeclareOption{breakable}{\@breakableoptiontrue}
+
+\ProcessOptions
+
+\RequirePackage[svgnames]{xcolor} % colors
+\RequirePackage[skins,theorems,breakable,raster,listings,xparse]{tcolorbox}
+\RequirePackage{mycolors}
+\RequirePackage{declarecommand}
+
+\if@breakableoption
+  \declarecommand{\enhanced}{enhanced}
+  \declarecommand{\breakable}{breakable} 
+\else
+  \declarecommand{\enhanced}{}
+  \declarecommand{\breakable}{}
+\fi
+
+% choose between minted (which uses python's pygments)
+% and lstlisting for the pythonblock and juliablock environments
+\if@prettycodeoption
+  \if@shellescapeoption
+    \RequirePackage[finalizecache]{minted}
+  \else
+    \RequirePackage[frozencache]{minted} 
+  \fi
+  \tcbuselibrary{minted}
+  \newcommand{\NewCodeBlockEnvironment}[7]{
+    \NewTCBListing{#1}{!O{}!O{}}{
+      title = #2,%
+      colback = #3,%
+      colframe = #4,%
+      minted language = #5,%
+      listing only,%
+      boxrule = 1pt,%
+      before skip = 8pt,% 
+      fonttitle=\small\sc\bfseries,%
+      minted options={autogobble,##2},%
+      fontupper=\small,%
+      \enhanced,%
+      \breakable,%
+      ##1%
+    }
+    \NewTotalTCBox{#6}{ v } {%
+      verbatim,%
+      boxrule=0.25pt,%
+      left=0.25pt,%
+      right=0.25pt,%
+      colback=#3,%
+      colframe=#4}{\mintinline{#5}{##1}%
+    }
+    \NewTCBInputListing{#7}{O{}m}{
+      listing file={##2},%
+      title = #2,%
+      colback = #3,%
+      colframe = #4,% 
+      minted language = #5,%
+      listing only,%
+      boxrule = 1pt,%
+      before skip = 8pt,%
+      fonttitle=\small\sc\bfseries,%
+      minted options={autogobble},%
+      fontupper=\small,%
+      enhanced,%
+      breakable,% 
+      ##1%
+    }
+  }
+  \NewCodeBlockEnvironment{juliablock}{Julia}{softred}{red!40!black}{julia}{juliainline}{juliainput}
+  \NewCodeBlockEnvironment{pythonblock}{Python}{softblue}{blue!40!black}{python3}{pythoninline}{pythoninput}
+  \NewCodeBlockEnvironment{rblock}{R}{softyellow}{yellow!40!black}{r}{rinline}{rinput}
+  \NewCodeBlockEnvironment{textblock}{Python/Julia/R}{shadecolor}{gray}{text}{textinline}{textinput}
+  \newcommand{\jlverb}[1]{\mintinline{julia}{#1}}
+  \newcommand{\pyverb}[1]{\mintinline{python3}{#1}}
+  \newcommand{\rverb}[1]{\mintinline{r}{#1}}
+  \newcommand{\textverb}[1]{\mintinline{text}{#1}}
+
+  \newcounter{blockcounter}
+  \setcounter{blockcounter}{1}
+
+  \NewDocumentEnvironment{juliablockc}{ !O{} !O{} }
+  {\VerbatimEnvironment
+    \begin{VerbatimOut}{mycode-tmp-\theblockcounter.jl}%
+    }{%
+    \end{VerbatimOut}%
+    \juliainput[#1]{mycode-tmp-\theblockcounter.jl}%
+    \jlc[#2]{include("../mycode-tmp-"*string(BLOCKCTR)*".jl"); BLOCKCTR += 1}%
+    \stepcounter{blockcounter}%
+  }
+
+  % \NewDocumentEnvironment{juliablockc}{}%
+  % {\VerbatimEnvironment
+  %   \begingroup\obeylines\jlgetargs}%
+  % {\end{VerbatimOut}%
+  % \juliainput[\argone]{mycode-tmp.jl}%
+  % \jlc[\argtwo]{include("../mycode-tmp.jl")}%
+  % }
+  % \NewDocumentCommand\jlgetargs{ !O{} !O{} }
+  % {\endgroup%
+  %   \def\argone{#1}%
+  %   \def\argtwo{#2}%
+  %   \begin{VerbatimOut}{mycode-tmp.jl}%
+  % }%
+
+  % \NewDocumentEnvironment{pythonblockc}{}%
+  % {\VerbatimEnvironment
+  %   \begingroup\obeylines\pygetargs}%
+  % {\end{VerbatimOut}%
+  % \pythoninput[\argone]{mycode-tmp.py}%
+  % \pyc[\argtwo]{include("../mycode-tmp.py")}%
+  % }
+  % \NewDocumentCommand\pygetargs{ O{} O{} }
+  % {\endgroup%
+  %   \def\argone{#1}%
+  %   \def\argtwo{#2}%
+  %   \begin{VerbatimOut}{mycode-tmp.py}%
+  % }%
+  
+  % \NewDocumentEnvironment{Rblockc}{}%
+  % {\VerbatimEnvironment
+  %   \begingroup\obeylines\Rgetargs}%
+  % {\end{VerbatimOut}%
+  % \Rinput[\argone]{mycode-tmp.r}%
+  % \Rc[\argtwo]{include("../mycode-tmp.r")}%
+  % }
+  % \NewDocumentCommand\Rgetargs{ O{} O{} }
+  % {\endgroup%
+  %   \def\argone{#1}%
+  %   \def\argtwo{#2}%
+  %   \begin{VerbatimOut}{mycode-tmp.r}%
+  % }%
+  
+
+\else % --- USE LISTINGS INSTEAD OF MINTED ------------------
+\RequirePackage{listings} % code formatting
+\lstdefinelanguage{Julia}%
+  {morekeywords={abstract,break,case,catch,const,continue,do,else,elseif,%
+      end,export,false,for,function,immutable,import,importall,if,in,%
+      macro,module,otherwise,quote,return,switch,true,try,type,struct,mutable,typealias,%
+      using,while},%
+   sensitive=true,%
+   alsoother={},%
+   morecomment=[l]\#,%
+   morecomment=[n]{\#=}{=\#},%
+   morestring=[s]{"}{"},%
+   morestring=[m]{'}{'},%
+ }[keywords,comments,strings]%
+\lstdefinelanguage{text}{}%
+\tcbuselibrary{listingsutf8}
+  \newcommand{\NewCodeBlockEnvironment}[6]{
+    \NewTCBListing{#1}{!O{}}{%
+      title = #2,%
+      colback = #3,%
+      colframe = #4,% 
+      listing engine=listings,%
+      listing only,%
+      top = 0pt,%
+      bottom = 0pt,%
+      boxrule = 1pt,%
+      before skip = 8pt,%
+      fonttitle=\small\sc\bfseries,%
+      fontupper=\small,%
+      listing options = {language=#5,backgroundcolor=\color{#3}},%
+      ##1%
+    }
+    \NewTotalTCBox{#6}{ v } {%
+      verbatim,%
+      boxrule=0.25pt,%
+      left=0.25pt,%
+      right=0.25pt,%
+      colback=#3,%
+      colframe=#4}{\lstinline[language=#5]^##1^%
+    }
+  }
+  \NewCodeBlockEnvironment{juliablock}{Julia}{softred}{red!40!black}{Julia}{juliainline}
+  \NewCodeBlockEnvironment{pythonblock}{Python}{softblue}{blue!40!black}{Python}{pythoninline}
+  \NewCodeBlockEnvironment{rblock}{R}{softyellow}{yellow!40!black}{R}{rinline}
+  \NewCodeBlockEnvironment{textblock}{Python/Julia/R}{shadecolor}{gray}{text}{textinline}
+\fi
+\lstset{
+  basicstyle       = \ttfamily,
+  keywordstyle     = \bfseries\color{blue},
+  stringstyle      = \color{magenta},
+  commentstyle     = \color{ForestGreen},
+  showstringspaces = false,
+  backgroundcolor  = \color{shadecolor},
+  belowskip        = 1mm
+}
+%-------------------------------------------------

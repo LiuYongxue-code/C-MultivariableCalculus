@@ -1,0 +1,21 @@
+
+\ProvidesPackage{giambattista-lua}
+
+\RequirePackage[math-style=ISO]{unicode-math} % Upright Greek letters.
+
+% \defaultfontfeatures{Scale = MatchLowercase}
+\setmainfont{TeX Gyre Pagella}
+
+\setmathfont{TeX Gyre Pagella Math}
+\setmathfont[range=up/{Greek,greek}]{LinguisticsPro-Regular.otf}
+\setmathfont[range=it/{Greek,greek}]{LinguisticsPro-Italic.otf}
+\setmathfont[range=bfup/{Greek,greek}]{LinguisticsPro-Bold.otf}
+\setmathfont[range=bfit/{Greek,greek}]{LinguisticsPro-BoldItalic.otf}
+\setmathfont[range=\mathcal]{Latin Modern Math}
+% workaround for unicode-math bug which breaks square root symbols
+\setmathfont[range=\int]{TeX Gyre Pagella Math} 
+
+\setsansfont{Latin Modern Sans}
+\setmonofont[Scale=0.8]{DejaVu Sans Mono}
+
+\renewcommand{\epsilon}{\varepsilon}

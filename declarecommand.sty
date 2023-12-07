@@ -1,0 +1,14 @@
+
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{declarecommand}[2018/11/28 declarecommand package]
+
+% ---DECLARECOMMAND---------------------------------------------
+% (avoid having to choose between newcommand and renewcommand)
+\newcommand*{\declarecommand}{%
+  \@star@or@long\declare@command
+}
+\newcommand*{\declare@command}[1]{%
+  \provide@command{#1}{}%
+  \renew@command{#1}%
+}

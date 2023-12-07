@@ -1,0 +1,100 @@
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{juliatex}[2018/10/12 juliatex package]
+
+\newif\if@minimaloption
+\DeclareOption{minimal}{\@minimaloptiontrue}
+\newif\if@luaoption
+\DeclareOption{lua}{\@luaoptiontrue}
+
+\ProcessOptions
+
+\RequirePackage[usefamily=jl,gobble=auto]{pythontex}
+\RequirePackage{iftex} 
+
+\ifLuaTeX
+  \if@luaoption
+    \RequirePackage{luacode}
+    \begin{luacode}
+    ffi = require("ffi")
+    JULIA = ffi.load("/Applications/Julia-1.4.app/Contents/Resources/julia/lib/libjulia.dylib", true)
+    ffi.cdef [[
+      void jl_init__threading(void);
+      int jl_is_initialized(void);
+
+      typedef struct _jl_value_t jl_value_t;
+      jl_value_t *jl_eval_string(const char*);
+      char *jl_string_ptr(jl_value_t *);
+    ]]
+    JULIA.jl_init__threading()
+
+    julia = julia or {}
+
+    function julia.eval(str, flag)
+      local jval  = JULIA.jl_eval_string(str)
+      if flag then
+        local lval = ffi.string(JULIA.jl_string_ptr(jval))
+        tex.sprint(lval)
+      end
+    end
+    \end{luacode}
+    \newcommand{\ljlsetup}[1]{\directlua{julia.eval([===[#1]===],false)}}
+    \newcommand{\ljl}[1]{\directlua{julia.eval([===[string(#1)]===],true)}}
+  \fi
+\fi
+
+\if@minimaloption
+\begin{jlcode}
+  using LinearAlgebra, Statistics
+  BLOCKCTR = 1
+\end{jlcode}
+\else
+\begin{jlcode}
+  BLOCKCTR = 1
+  using SymPy
+  using LinearAlgebra
+  ilafound = false
+  try
+    using IntroLinearAlgebra
+    global ilafound 
+    ilafound = true
+  catch
+    nothing
+  end
+  stripdollars(s) = s[2:end-1] 
+  if ilafound
+    tex(x::AbstractArray{T,2}) where T = stripdollars(IntroLinearAlgebra.texstring(x))
+    tex(x::AbstractArray{T,1}) where T = stripdollars(IntroLinearAlgebra.texstring(x))
+    tex(x::Adjoint) = stripdollars(IntroLinearAlgebra.texstring(collect(x)))
+    rref = IntroLinearAlgebra.rref
+  else
+    tex(x::AbstractArray) = sympy.latex(convert(Array{Sym},x))
+    tex(x::Adjoint) = sympy.latex(convert(Array{Sym},x))
+  end
+  tex() = ""  
+  tex(x) = sympy.latex(x)
+  @vars a b c x y z t m n r θ ϕ ρ
+  POINTS = 0
+  hsin(x) = sin(x,evaluate=false)
+  hcos(x) = cos(x,evaluate=false)
+  htan(x) = tan(x,evaluate=false)
+  hsec(x) = sec(x,evaluate=false)
+  hcsc(x) = csc(x,evaluate=false)
+  hcot(x) = cot(x,evaluate=false)
+  hexp(x) = exp(x,evaluate=false)
+  hpow(x...) = sympy.Pow(x...,evaluate=false)
+  hmul(x...) = sympy.Mul(x...,evaluate=false)
+  hadd(x...) = sympy.Add(x...,evaluate=false)
+\end{jlcode}
+
+\begin{jlcode}
+    function p(k::Integer)
+        global POINTS
+        POINTS += k
+        string(k)
+    end
+    p() = string() # in case p is called with no argument
+\end{jlcode}
+
+\newcommand\jltex[1]{\jl{tex(#1)}}
+\fi

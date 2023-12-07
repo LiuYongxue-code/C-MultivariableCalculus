@@ -1,0 +1,119 @@
+
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{mathmacros}[2018/10/12 mathmacros package]
+
+\RequirePackage{amsmath}
+\RequirePackage{amssymb}
+\RequirePackage{giambattista}
+\RequirePackage{xparse}
+\RequirePackage{declarecommand}
+\RequirePackage{iftex}
+
+%---SYMBOL MACROS-----------------------------------------------
+
+\declarecommand{\Z}{\mathbb{Z}}
+\declarecommand{\R}{\mathbb{R}}
+\declarecommand{\N}{\mathbb{N}}
+\declarecommand{\Q}{\mathbb{Q}}
+\declarecommand{\C}{\mathbb{C}}
+\declarecommand{\P}{\mathbb{P}}
+\declarecommand{\E}{\mathbb{E}}
+\DeclareDocumentCommand{\vec}{m}{\mathbf{#1}}
+%\declarecommand{\transpose}{}{^{\mathsf{T}}}
+\declarecommand{\transpose}{'}
+\declarecommand{\complement}{^\mathsf{c}}
+\DeclareMathOperator{\Var}{Var}
+\DeclareMathOperator{\Cov}{Cov}
+\DeclareMathOperator{\Corr}{Corr}
+\DeclareMathOperator{\argmax}{argmax}
+\DeclareMathOperator{\argmin}{argmin}
+\declarecommand{\d}{\mathrm{d}}
+\declarecommand{\e}{\mathrm{e}}
+\declarecommand{\given}{\,|\,}
+\declarecommand{\complement}{^\mathsf{c}}
+
+\DeclareMathOperator{\arcsec}{arcsec}
+\DeclareMathOperator{\cis}{cis}
+\DeclareMathOperator{\Real}{Re}
+\DeclareMathOperator{\Imag}{Im}
+\newcommand\pd[2]{\frac{\partial #1}{\partial #2}}
+
+\newcommand{\threevec}[3]{\begin{bmatrix} #1 \\ #2 \\ #3 \end{bmatrix}}
+
+\newcommand{\eps}{\varepsilon}
+
+\newcommand{\bdone}{\boldsymbol{1}}
+
+% \ifLuaTeX
+%   \newcommand{\bdGamma}{\symbf{\Gamma}}
+%   \newcommand{\bdDelta}{\symbf{\Delta}}
+%   \newcommand{\bdTheta}{\symbf{\Theta}}
+%   \newcommand{\bdLambda}{\symbf{\Lambda}}
+%   \newcommand{\bdXi}{\symbf{\Xi}}
+%   \newcommand{\bdPi}{\symbf{\Pi}}
+%   \newcommand{\bdSigma}{\symbf{\Sigma}}
+%   \newcommand{\bdUpsilon}{\symbf{\Upsilon}}
+%   \newcommand{\bdPhi}{\symbf{\Phi}}
+%   \newcommand{\bdPsi}{\symbf{\Psi}}
+%   \newcommand{\bdOmega}{\symbf{\Omega}}
+%   \newcommand{\bdalpha}{\symbf{\alpha}}
+%   \newcommand{\bdbeta}{\symbf{\beta}}
+%   \newcommand{\bdgamma}{\symbf{\gamma}}
+%   \newcommand{\bddelta}{\symbf{\delta}}
+%   \newcommand{\bdepsilon}{\symbf{\epsilon}}
+%   \newcommand{\bdzeta}{\symbf{\zeta}}
+%   \newcommand{\bdeta}{\symbf{\eta}}
+%   \newcommand{\bdtheta}{\symbf{\theta}}
+%   \newcommand{\bdiota}{\symbf{\iota}}
+%   \newcommand{\bdkappa}{\symbf{\kappa}}
+%   \newcommand{\bdlambda}{\symbf{\lambda}}
+%   \newcommand{\bdmu}{\symbf{\mu}}
+%   \newcommand{\bdnu}{\symbf{\nu}}
+%   \newcommand{\bdxi}{\symbf{\xi}}
+%   \newcommand{\bdpi}{\symbf{\pi}}
+%   \newcommand{\bdrho}{\symbf{\rho}}
+%   \newcommand{\bdsigma}{\symbf{\sigma}}
+%   \newcommand{\bdtau}{\symbf{\tau}}
+%   \newcommand{\bdupsilon}{\symbf{\upsilon}}
+%   \newcommand{\bdphi}{\symbf{\phi}}
+%   \newcommand{\bdchi}{\symbf{\chi}}
+%   \newcommand{\bdpsi}{\symbf{\psi}}
+%   \newcommand{\bdomega}{\symbf{\omega}}
+%   \newcommand{\bdvarepsilon}{\symbf{\varepsilon}}
+%   \newcommand{\bdvartheta}{\symbf{\vartheta}}
+%   \newcommand{\bdvarpi}{\symbf{\varpi}}
+%   \newcommand{\bdvarrho}{\symbf{\varrho}}
+%   \newcommand{\bdvarsigma}{\symbf{\varsigma}}
+%   \newcommand{\bdvarphi}{\symbf{\varphi}}
+% \else
+  \newcommand{\bdalpha}{\boldsymbol{\boldalpha}}
+  \newcommand{\bdbeta}{\boldsymbol{\boldbeta}}
+  \newcommand{\bdgamma}{\boldsymbol{\boldgamma}}
+  \newcommand{\bddelta}{\boldsymbol{\bolddelta}}
+  \newcommand{\bdepsilon}{\boldsymbol{\boldepsilon}}
+  \newcommand{\bdzeta}{\boldsymbol{\boldzeta}}
+  \newcommand{\bdeta}{\boldsymbol{\boldeta}}
+  \newcommand{\bdtheta}{\boldsymbol{\boldtheta}}
+  \newcommand{\bdiota}{\boldsymbol{\boldiota}}
+  \newcommand{\bdkappa}{\boldsymbol{\boldkappa}}
+  \newcommand{\bdlambda}{\boldsymbol{\boldlambda}}
+  \newcommand{\bdmu}{\boldsymbol{\boldmu}}
+  \newcommand{\bdnu}{\boldsymbol{\boldnu}}
+  \newcommand{\bdxi}{\boldsymbol{\boldxi}}
+  \newcommand{\bdpi}{\boldsymbol{\boldpi}}
+  \newcommand{\bdrho}{\boldsymbol{\boldrho}}
+  \newcommand{\bdsigma}{\boldsymbol{\boldsigma}}
+  \newcommand{\bdtau}{\boldsymbol{\boldtau}}
+  \newcommand{\bdupsilon}{\boldsymbol{\boldupsilon}}
+  \newcommand{\bdphi}{\boldsymbol{\boldphi}}
+  \newcommand{\bdchi}{\boldsymbol{\boldchi}}
+  \newcommand{\bdpsi}{\boldsymbol{\boldpsi}}
+  \newcommand{\bdomega}{\boldsymbol{\boldomega}}
+  \newcommand{\bdvarepsilon}{\boldsymbol{\boldvarepsilon}}
+  \newcommand{\bdvartheta}{\boldsymbol{\boldvartheta}}
+  \newcommand{\bdvarpi}{\boldsymbol{\boldvarpi}}
+  \newcommand{\bdvarrho}{\boldsymbol{\boldvarrho}}
+  \newcommand{\bdvarsigma}{\boldsymbol{\boldvarsigma}}
+  \newcommand{\bdvarphi}{\boldsymbol{\boldvarphi}}
+%\fi

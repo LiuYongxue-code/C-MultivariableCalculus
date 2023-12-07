@@ -1,0 +1,93 @@
+
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{theoremboxes}[2018/10/12 theoremboxes package]
+
+\RequirePackage{mycolors}
+
+\numberwithin{equation}{section}
+
+\@ifundefined{myparskiplength}{
+  \newlength{\myparskiplength}
+  \setlength{\myparskiplength}{3.6pt}
+}{}
+\@ifundefined{myparindentlength}{
+  \newlength{\myparindentlength}
+  \setlength{\myparindentlength}{0pt}
+}{}
+
+\newtcbtheorem[number within=section]{theo}{Theorem}{
+  colback=Purple!5,
+  colframe=Purple!50!black, %red!35!black,
+  fonttitle=\bfseries}{th}
+\newtcbtheorem[number within=section]{obs}{Observation}{
+  colback=Turquoise!8!white,
+  colframe=Turquoise!50!black,
+  fonttitle=\bfseries}{obs}
+\newtcbtheorem[number within=section]{exercise}{Exercise}{
+  colback=softseagreen,
+  colframe=SeaGreen,
+  fonttitle=\bfseries,
+  before upper = {
+    \parskip = \myparskiplength
+    \parindent = \myparindentlength
+  }}{exer}
+\newcounter{aexercise}
+\setcounter{aexercise}{0}
+\newtcolorbox{aexercise}[1][]{
+  title=Exercise~\thesubsection.\theaexercise, 
+  colback=softseagreen,
+  colframe=SeaGreen,
+  fonttitle=\bfseries,
+  code=\stepcounter{aexercise},
+  before upper = {
+    \parskip = \myparskiplength
+    \parindent = \myparindentlength
+  },
+  #1}
+\newtcbtheorem[number within=section]{example}{Example}{
+  enhanced,
+  breakable, 
+  before upper = {
+    \parskip = \myparskiplength
+    \parindent = \myparindentlength
+  }, 
+  colback=softblue,
+  colframe=MidnightBlue,
+  fonttitle=\bfseries}{exam}
+\newtcbtheorem[number within=section]{defn}{Definition}{colback=Purple!5,
+  colframe=Purple,
+  fonttitle=\bfseries}{defn}
+\newtcolorbox{solution}[1][title=Solution]{
+  enhanced,
+  breakable,
+  before upper = {
+    \parskip = \myparskiplength
+    \parindent = \myparindentlength
+  }, 
+  colback=softyellow,
+  colframe=Orange!75!black,
+  fonttitle=\bfseries,
+  #1}
+\newtcolorbox{examplesolution}[1][title=Solution]{
+  enhanced,
+  breakable,
+  before upper = {
+    \parskip = \myparskiplength
+    \parindent = \myparindentlength
+  }, 
+  colback=softyellow,
+  colframe=Orange!75!black,
+  fonttitle=\bfseries,
+  #1}
+\newtcolorbox{pf}[1][title=Proof]{
+  enhanced,
+  breakable,
+  before upper = {
+    \parskip = \myparskiplength
+    \parindent = \myparindentlength
+  }, 
+  colback=softyellow,
+  colframe=Orange!75!black,
+  fonttitle=\bfseries,
+  #1}

@@ -1,0 +1,93 @@
+
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{insetfigure}[2018/10/12 insetfigure package] 
+
+\RequirePackage{xparse}
+\RequirePackage{calc}
+
+\@ifundefined{myparskiplength}{
+  \newlength{\myparskiplength}
+  \setlength{\myparskiplength}{3.6pt}
+}{}
+\@ifundefined{myparindentlength}{
+  \newlength{\myparindentlength}
+  \setlength{\myparindentlength}{0pt}
+}{}
+
+\newlength{\myfigurewidth}
+\newsavebox{\insetfiguresavebox}
+
+\NewDocumentEnvironment{insetfigmanual}{O{0.7\textwidth}O{0.29\textwidth}O{t}O{}+m}
+{
+\begin{minipage}[#3]{#1} \parskip = \myparskiplength \parindent = \myparindentlength
+}
+{
+\end{minipage} \hfill
+\begin{minipage}[#3]{#2}
+\centering
+\raisebox{\dimexpr -\height + 1.5ex\relax}{#5}
+
+#4
+\end{minipage}
+}
+
+% insetfigure arguments:
+% - figure (e.g, with includegraphics) 
+% - caption (e.g. wrapped in \caption{figure}{})
+% - gap between figure and text
+% - alignment (t or b or c)
+\NewDocumentEnvironment{insetfigure}{+mO{}O{36pt}O{t}}{%
+  \begin{lrbox}{\insetfiguresavebox}%
+    #1
+  \end{lrbox}%
+  \setlength{\myfigurewidth}{\wd\insetfiguresavebox}%
+  \begin{insetfigmanual}[\textwidth - \myfigurewidth - #3][\myfigurewidth][#4][#2]{\usebox{\insetfiguresavebox}}
+  }{
+  \end{insetfigmanual}
+}
+
+\NewDocumentCommand{\doublefigure}{O{}mO{}mmmO{0.45\textwidth}O{0.45\textwidth}}{%
+  \begin{center} 
+    \begin{minipage}{#7}
+      \begin{center} 
+        \includegraphics[#1]{#2}
+      \end{center}
+      \captionof{figure}{#5}
+    \end{minipage} \hspace{0.05\textwidth}
+    \begin{minipage}{#8}
+      \begin{center}
+        \includegraphics[#3]{#4}
+      \end{center}
+      \captionof{figure}{#6}
+    \end{minipage}
+  \end{center}%
+}
+
+\NewDocumentCommand{\singlefigurecaption}{O{}mm}{
+    \begin{minipage}{0.8\textwidth}
+      \begin{center} 
+        \includegraphics[#1]{#2}
+      \end{center}
+      \captionof{figure}{#3}
+    \end{minipage}
+}
+
+\NewDocumentCommand{\singlefigure}{O{}m}{
+  \includegraphics[#1]{#2}
+}
+
+\NewDocumentCommand{\twographics}{O{} m O{} m O{0.05\textwidth} O{0.45\textwidth} O{0.45\textwidth}}{%
+  \begin{center} 
+    \begin{minipage}{#6}
+      \begin{center} 
+        \includegraphics[#1]{#2}
+      \end{center}
+    \end{minipage} \hspace{#5}
+    \begin{minipage}{#7}
+      \begin{center}
+        \includegraphics[#3]{#4}
+      \end{center}
+    \end{minipage}
+  \end{center}%
+}

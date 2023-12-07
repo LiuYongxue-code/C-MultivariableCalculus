@@ -1,0 +1,53 @@
+
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{sidenotes}[2018/10/12 sidenotes package]
+
+\RequirePackage{xparse} 
+\RequirePackage{tikz}
+\RequirePackage{marginnote}
+
+% fix marginnote's interaction with wrapfigure:----
+\RequirePackage{xpatch} 
+\patchcmd\@mn@@@marginnote{\hsize\marginparwidth}{\@parboxrestore\hsize=\marginparwidth}{}{\fail}
+\patchcmd\@mn@@@marginnote{\hsize\marginparwidth}{\@parboxrestore\hsize=\marginparwidth}{}{\fail}
+
+%--SIDE NOTES-------------------------------------
+\newlength{\marginvoffset} 
+\DeclareDocumentCommand{\sidenote}{O{rectangle,thick,black,text width =
+    17.5mm,draw=MidnightBlue,fill=softblue,rounded corners=0.5mm} m O{0pt}}{%
+  \setlength{\marginvoffset}{#3 - 12pt}%
+  \reversemarginpar %
+  \marginnote[{%
+    \makebox[0pt][r]{%
+      \scriptsize \tikz \node at (0,-1) [#1]{#2};%
+    }%
+  }]{{%
+      \makebox[0pt][l]{%
+        \scriptsize \tikz \node at (0,-1) [#1]{#2};%
+      }%
+    }}[\marginvoffset]%
+}
+
+
+% example: \authornote{ssw}{green}{Add reference here}
+\DeclareDocumentCommand{\authornote}{m m m O{0pt}}{%
+       \setlength{\marginvoffset}{#4 - 12pt}%
+       \normalmarginpar%
+       \marginnote[{%
+          \makebox[0pt][r]{%
+            \scriptsize \tikz \node at (0,-1) [rectangle,thick,black,text width = %
+       17.5mm,draw=#2,rounded corners=0.5mm,fill=#2]{\textcolor{white}{#1: #3}};%
+          }}]{%
+          \makebox[0pt][l]{%
+            \scriptsize \tikz \node at (0,-1) [rectangle,thick,black,text width = %
+       17.5mm,draw=#2,rounded corners=0.5mm,fill=#2]{\textcolor{white}{#1: #3}};%
+          }%
+          }[\marginvoffset]%
+	  }
+
+% -----------------------------------------------
+
+\newcommand{\bang}[1]{\marginnote{ \Huge \color{DarkRed} !!!}[#1]}
+       
+\newcommand{\datemarker}[1]{\sidenote[rectangle,text width =
+  1.75cm,draw,fill=black!25,rounded corners]{\centerline{#1}}}
